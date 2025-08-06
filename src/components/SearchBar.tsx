@@ -1,5 +1,7 @@
-import React from 'react'
+import React, { useMemo} from 'react'
 import { Input } from './ui/input';
+import debounce from 'lodash.debounce';
+
 
 interface props{
   query: string;
@@ -8,9 +10,14 @@ interface props{
 
 const SearchBar = ({ query, setQuery }: props) => {
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setQuery(e.target.value);
-    }; 
+    const debouncedSetQuery = useMemo(
+    () => debounce((value: string) => setQuery(value), 500),
+    [setQuery]
+  );
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    debouncedSetQuery(e.target.value);
+  };
 
   return (
     <div>
